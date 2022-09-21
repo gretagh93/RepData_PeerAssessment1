@@ -9,24 +9,60 @@ output:
 ## Loading and preprocessing the data
 
 Unzip
-```{r}
+```{r unzip, echo=TRUE}
 unzip("activity.zip")
 ```
 Read csv file
-```{r}
+```{r read, echo=TRUE}
 act <- read.csv("activity.csv")
 ```
 Check data
-```{r}
+```{r check, echo=TRUE}
 head(act)
 summary(act)
 ```
 
 ## What is mean total number of steps taken per day?
 
+Calculate the total number of steps taken per day
 
+```{r steps_day, echo=TRUE}
+act_notNan <- subset(act, !is.na(act$steps))
+act_steps_day <- setNames(aggregate(
+                          x=act_notNan$steps, by=list(act_notNan$date), sum), 
+                 c("Date", "Total_Steps"))
+
+```
+
+If you do not understand the difference between a histogram and a barplot, 
+research the difference between them. Make a histogram of the total number 
+of steps taken each day
+
+```{r hist, echo=TRUE}
+hist(act_steps_day$'Total_Steps', 
+     col = "green", main="Steps Frequency", xlab = "Step Intervals")
+```
+
+Calculate and report the mean and median of the total number of steps taken 
+per day
+
+```{r meanMedian, echo=TRUE}
+mean(act_steps_day$Total_Steps)
+median(act_steps_day$Total_Steps)
+```
 
 ## What is the average daily activity pattern?
+
+Make a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) 
+and the average number of steps taken, averaged across all days (y-axis)
+
+```{r average, echo=TRUE}
+act_mean <- aggregate(steps ~ interval, data = act_notNan, mean)
+with(act_mean, plot(interval, steps, type="l", col="blue", main="Days Average"))
+
+```
+
+Which 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps?
 
 
 
